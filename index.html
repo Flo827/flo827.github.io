@@ -223,6 +223,13 @@ select{font-family:var(--font-body);font-size:.92rem;padding:8px 10px;border:1.5
 .btn-ghost:hover{background:var(--paper)}
 .btn-solid{background:var(--accent);border-color:var(--accent);color:#fff}
 .btn-solid:hover{background:var(--accent-deep);border-color:var(--accent-deep)}
+.btn-email{
+  display:block; text-align:center; text-decoration:none;
+  padding:10px; border-radius:8px;
+  font-weight:700; font-size:.88rem;
+  background:var(--accent); border:1.5px solid var(--accent); color:#fff;
+}
+.btn-email:hover{ background:var(--accent-deep); border-color:var(--accent-deep); }
 
 /* ---------- mobile bar ---------- */
 .mobilebar{display:none}
@@ -521,6 +528,7 @@ select{font-family:var(--font-body);font-size:.92rem;padding:8px 10px;border:1.5
     <p class="fine" id="fine"></p>
 
     <div class="actions">
+	  <a class="btn-email" id="btn-email" href="mailto:florianm.pafv@gmail.com"></a>
       <button class="btn-solid" id="btn-print"></button>
     </div>
   </aside>
@@ -860,7 +868,9 @@ fr:{
   toastRemovedDep:"{x} retiré — il dépend de {y}.",
   toastNoLongerNeeded:"{x} retiré — plus nécessaire.",
   toastSwap:"{x} remplace {y} — même fonction.",
-  print:"Imprimer ou enregistrer (PDF)", mbView:"Voir l'estimation"
+  print:"Imprimer ou enregistrer (PDF)", mbView:"Voir l'estimation",
+  email:"Discutons de votre projet",
+  emailSubject:"Discussion — votre devis TI avec Florian Matet"
 },
 en:{
   wmTag:"/ managed open-source IT",
@@ -977,7 +987,9 @@ en:{
   toastRemovedDep:"{x} removed — it depends on {y}.",
   toastNoLongerNeeded:"{x} removed — no longer needed.",
   toastSwap:"{x} replaces {y} — same job.",
-  print:"Print or save (PDF)", mbView:"View estimate"
+  print:"Print or save (PDF)", mbView:"View estimate",
+  email:"Chat about your project",
+  emailSubject:"Let's talk — your IT quote from Florian Matet"
 }};
 
 const CATEGORIES = [
@@ -1203,6 +1215,8 @@ function applyLang(){
   $("r-ctx").textContent=t("ratesCtx");
   $("fine").innerHTML=t("fine");
   $("btn-print").textContent=t("print");
+  $("btn-email").textContent=t("email");
+  $("btn-email").href="mailto:florianm.pafv@gmail.com?subject="+encodeURIComponent(t("emailSubject"));
   $("mb-view").textContent=t("mbView");
   buildCatalogue();
 }
