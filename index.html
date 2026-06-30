@@ -552,7 +552,7 @@ const CONFIG = {
     // --- hosted (our infrastructure) ---
     hosted: {
       setup: 2500,                    // one-time: dedicated client VM stack on our fabric (~4 days: VM, hardening, VPN, backups, monitoring, docs)
-      siteSetup: 750,                 // one-time: isolated public VPS for a website (server + Caddy/TLS + CrowdSec + backups; no mesh/identity/monitoring)
+      siteSetup: 1250,                 // one-time: isolated public VPS for a website (server + Caddy/TLS + CrowdSec + backups; no mesh/identity/monitoring)
       siteCare: 20,                   // monthly: dedicated website VPS hosting + updates + monitoring (separate from the app's own tier monthly)
       weights: { light: 1, standard: 2, heavy: 4 },
       sizes: [
@@ -620,14 +620,14 @@ const CONFIG = {
     hostedIncludedGB: 200,            // app data included with hosted suites
 
     supportBlocks: [                  // prepaid blocks (one-time, valid 12 months)
-      { hours: 5,   price: 375 },
-      { hours: 10,  price: 700 },
-      { hours: 25,  price: 1625 },
-      { hours: 50,  price: 3000 },
-      { hours: 100, price: 5500 }
+      { hours: 5,   price: 400 },
+      { hours: 10,  price: 800 },
+      { hours: 25,  price: 2000 },
+      { hours: 50,  price: 4000 },
+      { hours: 100, price: 8000 }
     ],
 
-    hourly: { business: 80, afterHours: 120, staffChange: 50 }  // staffChange = flat fee per employee arrival or departure
+    hourly: { business: 80, afterHours: 120, staffChange: 100 }  // staffChange = flat fee per employee arrival or departure
   }
 };
 
@@ -652,10 +652,10 @@ const APPS = [
   train:{price:600, en:"Folder structure, sharing policy, onboarding session", fr:"Structure de dossiers, politique de partage, session d'intégration"}},
  {id:"onlyoffice", name:"ONLYOFFICE", tier:"standard", lic:["FREE","AGPLv3; the old 20-connection limit was REMOVED in v9.4 (2026) and it is now single-process and lighter; best Microsoft-format (OOXML) fidelity"], rec:true, cat:1, alt:"office", needsOneOf:["nextcloud"],
   blurb:{en:"Word/Excel-style editing — the best fidelity with Microsoft file formats.", fr:"Édition style Word/Excel — la meilleure fidélité aux formats Microsoft."},
-  note:{en:"Requires Nextcloud or Seafile", fr:"Requiert Nextcloud ou Seafile"}},
+  note:{en:"Requires Nextcloud", fr:"Requiert Nextcloud"}},
  {id:"collabora", name:"Collabora", tier:"standard", lic:["FREE","CODE build MPL-2.0, no limits; lightest (approx 1GB RAM), best ODF fidelity"], cat:1, alt:"office", needsOneOf:["nextcloud"],
   blurb:{en:"LibreOffice engine — strongest with open formats (ODF) and tracked changes.", fr:"Moteur LibreOffice — le plus solide avec les formats ouverts (ODF)"},
-  note:{en:"Requires Nextcloud or Seafile", fr:"Requiert Nextcloud ou Seafile"}},
+  note:{en:"Requires Nextcloud", fr:"Requiert Nextcloud"}},
  {id:"paperlessngx", name:"Paperless-ngx", tier:"standard", lic:["FREE","GPLv3"], cat:1,
   blurb:{en:"Document management: scan it, OCR reads it, then find invoices, contracts and minutes with full-text search.", fr:"Gestion documentaire : numérisez tout avec OCR pour une recherche facile."},
   train:{price:450, en:"Scanning workflow, tags and filing rules", fr:"Flux de numérisation, étiquettes et règles de classement"}},
@@ -670,7 +670,7 @@ const APPS = [
   blurb:{en:"Any-to-any file conversion, in your browser, on your server.", fr:"Conversion de fichiers tous formats, dans le navigateur, sur votre serveur."}},
  // Communication
  {id:"rocketchat", name:"Rocket.Chat", tier:"standard", lic:["FREE","Community edition INCLUDES SSO/OAuth/LDAP/2FA (unlike Mattermost, which moved SSO to paid in 2025). Enterprise only adds FIPS/DoD/RBAC. Best chat for the Authentik stack."], cat:2,
-  blurb:{en:"Team chat similar to Mattermost.", fr:"Clavardage d'équipe similaire a Mattermost."},
+  blurb:{en:"Team chat similar to Slack.", fr:"Clavardage d'équipe similaire a Slack."},
   train:{price:300, en:"Channels, basic integrations, adoption", fr:"Canaux, intégrations de base, adoption"}},
  {id:"listmonk", name:"listmonk", tier:"standard", lic:["FREE","AGPLv3"], cat:2,
   blurb:{en:"Newsletters & mailing lists at pennies per send.", fr:"Infolettres et listes d'envoi pour quelques sous par envoi."},
@@ -758,11 +758,11 @@ fr:{
   auditEyebrow:"Avant tout", auditTitle:"Audit d'intégration — inclus dans chaque projet",
   auditSub:"Inventaire, revue de la sécurité et des sauvegardes, feuille de route écrite. Le montant est entièrement crédité sur votre projet si vous allez de l'avant dans les 60 jours — il apparaît donc dans l'estimation avec son crédit.",
   trialEyebrow:"Étape 1", trialTitle:"Essayez avant de vous engager",
-  trialSub:"Pas certain qu'une application vous convienne ? On monte un serveur d'essai temporaire, garni des applications de votre choix, accessible comme s'il était le vôtre. Vous testez en conditions réelles, sans rien installer, avant toute décision d'infrastructure.",
+  trialSub:"Pas certain qu'une application vous convienne ? On monte un serveur d'essai temporaire, garni d'une ou deux applications de votre choix, accessible comme s'il était le vôtre. Vous testez en conditions réelles, sans rien installer, avant toute décision d'infrastructure.",
   trialOptTitle:"Essai temporaire — {p} pour 2 semaines",
-  trialOptSub:"Serveur d'essai privé, applications de votre choix, accès sécurisé. Entièrement crédité sur votre projet si vous allez de l'avant dans les 60 jours.",
+  trialOptSub:"Serveur d'essai privé, accès sécurisé. Entièrement crédité sur votre projet si vous allez de l'avant dans les 60 jours.",
   depEyebrow:"Étape 2", depTitle:"Où est-ce hébergé ?",
-  depSub:"Commencez hébergé avec une ou deux applications, ou optez pour un serveur dédié dans vos locaux. (On peut passer de l'un à l'autre plus tard.)",
+  depSub:"Commencez hébergé ou optez pour un serveur dédié dans vos locaux. (On peut passer de l'un à l'autre plus tard.)",
   seg1Title:"Hébergé pour vous", seg1Tag:"Aucun matériel",
   seg1Desc:"Sur notre infrastructure gérée. Mise en service unique, puis des frais d'hébergement mensuels selon la taille de votre suite. Idéal pour démarrer.",
   seg2Title:"Votre serveur — chez vous", seg2Tag:"Investissement · subventionnable",
@@ -823,7 +823,7 @@ fr:{
   chipApps:"{n} app(s)", chipExtras:"{n} option(s)",
   chCloudCloud:"infonuagique", chCloudNas:"NAS",
   rHostedSetup:"Mise en service hébergée", rHostedSetupSub:"Espace dédié, réseau/VPN, sauvegardes, documentation",
-  rSiteServer:"Mise en place du serveur web", rSiteServerSub:"VPS isolé et durci pour le site (Caddy/TLS, CrowdSec, sauvegardes) — séparé de l'infrastructure interne",
+  rSiteServer:"Mise en place du serveur web", rSiteServerSub:"VPS isolé et durci pour le site — séparé de l'infrastructure interne",
   rSiteCare:"Hébergement et maintenance du serveur web", rSiteCareSub:"VPS dédié au site : hébergement, mises à jour et surveillance",
   rHostedBase:"Hébergement de base ({s})", rHostedBaseSub:"Selon la taille de votre suite — {g} Go de données d'applications inclus",
   sizeNames:["petite suite","suite moyenne","grande suite"],
@@ -875,9 +875,9 @@ en:{
   auditEyebrow:"Before anything", auditTitle:"Onboarding audit — part of every project",
   auditSub:"Inventory, security & backup review, written roadmap. The amount is fully credited toward your project if you go ahead within 60 days — so it appears in the estimate together with its credit.",
   trialEyebrow:"Step 1", trialTitle:"Try before you commit",
-  trialSub:"Not sure an app is right for you? We spin up a temporary trial server, loaded with the apps of your choice, that you can use as if it were your own. Test in real conditions, with nothing to install, before any infrastructure decision.",
+  trialSub:"Not sure an app is right for you? We spin up a temporary trial server, loaded one or two apps of your choice, that you can use as if it were your own. Test in real conditions, with nothing to install, before any infrastructure decision.",
   trialOptTitle:"Test sandbox — {p} for 2 weeks",
-  trialOptSub:"Private trial server, apps of your choice, secure access. Fully credited toward your project if you go ahead within 60 days.",
+  trialOptSub:"Private trial server, secure access. Fully credited toward your project if you go ahead within 60 days.",
   depEyebrow:"Step 2", depTitle:"Where does it live?",
   depSub:"Start hosted with one or two apps, or go for a dedicated server at your office. You can move from one to the other later.",
   seg1Title:"Hosted for you", seg1Tag:"No hardware",
@@ -940,7 +940,7 @@ en:{
   chipApps:"{n} app(s)", chipExtras:"{n} option(s)",
   chCloudCloud:"cloud", chCloudNas:"NAS",
   rHostedSetup:"Hosted onboarding", rHostedSetupSub:"Dedicated space, network/VPN, backups, documentation",
-  rSiteServer:"Website server setup", rSiteServerSub:"Hardened, isolated VPS for the site (Caddy/TLS, CrowdSec, backups) — separate from internal infrastructure",
+  rSiteServer:"Website server setup", rSiteServerSub:"Hardened, isolated VPS for the site — separate from internal infrastructure",
   rSiteCare:"Website server hosting & maintenance", rSiteCareSub:"Dedicated site VPS: hosting, updates and monitoring",
   rHostedBase:"Hosting base ({s})", rHostedBaseSub:"Scales with your app suite — includes {g} GB of app data",
   sizeNames:["small suite","medium suite","large suite"],
