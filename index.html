@@ -71,6 +71,21 @@ button{font-family:inherit;cursor:pointer}
 .block-head{display:flex;flex-direction:column;gap:3px;margin-bottom:8px;align-items:flex-start}
 .block-head.row{flex-direction:row;align-items:baseline;justify-content:space-between;width:100%;flex-wrap:wrap;gap:10px}
 .eyebrow{font-family:var(--font-mono);font-size:.7rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+
+/* ---------- collapsible steps ---------- */
+.block.step{padding:0;overflow:hidden}
+.step-head{width:100%;display:flex;align-items:center;gap:14px;padding:18px 22px;background:var(--surface);border:none;text-align:left;transition:background .15s}
+.step-head:hover{background:var(--accent-tint)}
+.step-num{font-family:var(--font-display);font-weight:700;font-size:1.32rem;line-height:1;color:var(--accent);background:var(--accent-tint);border-radius:9px;min-width:42px;height:42px;display:flex;align-items:center;justify-content:center;flex:none}
+.step-head[aria-expanded="true"] .step-num{background:var(--accent);color:#fff}
+.step-headings{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.step-eyebrow{font-family:var(--font-mono);font-size:.66rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+.step-title{font-family:var(--font-display);font-weight:700;font-size:1.28rem;line-height:1.1;color:var(--ink)}
+.step-chip{font-family:var(--font-mono);font-size:.72rem;font-weight:600;color:var(--accent-deep);background:var(--accent-tint);border-radius:999px;padding:3px 10px;white-space:nowrap}
+.step-chev{font-size:.95rem;color:var(--accent-deep);transition:transform .15s;flex:none}
+.step-head[aria-expanded="false"] .step-chev{transform:rotate(-90deg)}
+.step-body{padding:0 22px 24px}
+.step-body.pad-top{padding-top:4px}
 .block h2{font-family:var(--font-display);font-weight:600;font-size:1.32rem}
 .block-sub{color:var(--ink-soft);font-size:.92rem;margin-bottom:18px;max-width:640px}
 .mini-btns{display:flex;gap:8px;flex-wrap:wrap}
@@ -129,6 +144,9 @@ button{font-family:inherit;cursor:pointer}
 .app{position:relative;border:1.5px solid var(--line);border-radius:var(--radius);padding:12px 12px 10px;background:var(--surface);text-align:left;transition:border-color .15s,background .15s;display:flex;flex-direction:column;gap:6px;cursor:pointer}
 .app:hover{border-color:#B9CCC6}
 .app[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-tint)}
+.app.rec{border-color:var(--accent)}
+.app[aria-pressed="true"].rec{border-color:var(--accent-deep)}
+.app .rec-badge{align-self:flex-start;display:inline-flex;align-items:center;gap:4px;font-family:var(--font-mono);font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:var(--accent);border-radius:999px;padding:3px 9px}
 .app .top{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .app .name{font-weight:700;font-size:.95rem}
 .app .blurb{font-size:.82rem;color:var(--ink-soft);line-height:1.35;flex:1}
@@ -156,6 +174,10 @@ button{font-family:inherit;cursor:pointer}
 
 /* ---------- extras ---------- */
 .extra-row{display:flex;align-items:center;gap:14px;padding:15px 0;border-bottom:1px dashed var(--line);justify-content:space-between;flex-wrap:wrap}
+.subgroup{font-family:var(--font-mono);font-size:.7rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-deep);background:var(--accent-tint);border-radius:6px;padding:6px 10px;margin:20px 0 4px}
+.subgroup:first-child{margin-top:0}
+.lock-note{display:block;font-size:.78rem;color:var(--warn);margin-top:4px}
+.stepper.locked{opacity:.5;pointer-events:none}
 .extra-row:first-of-type{padding-top:4px}
 .extra-row:last-child{border-bottom:none;padding-bottom:4px}
 .extra-row input[type=checkbox]{width:17px;height:17px;accent-color:var(--accent);flex:none}
@@ -270,74 +292,157 @@ select{font-family:var(--font-body);font-size:.92rem;padding:8px 10px;border:1.5
       <p class="block-sub" id="audit-sub" style="margin-top:8px"></p>
     </section>
 
-    <!-- DEPLOYMENT -->
-    <section class="block">
-      <div class="block-head"><span class="eyebrow" id="dep-eyebrow"></span><h2 id="dep-title"></h2></div>
-      <p class="block-sub" id="dep-sub"></p>
-      <div class="segment" role="group" id="dep-segment">
-        <button id="seg-hosted" aria-pressed="true">
-          <span class="seg-title" id="seg1-title"></span>
-          <span class="seg-tag" id="seg1-tag"></span>
-          <span class="seg-desc" id="seg1-desc"></span>
-        </button>
-        <button id="seg-owned" aria-pressed="false">
-          <span class="seg-title" id="seg2-title"></span>
-          <span class="seg-tag" id="seg2-tag"></span>
-          <span class="seg-desc" id="seg2-desc"></span>
-        </button>
+    <!-- TRIAL (Step 1) -->
+    <section class="block step">
+      <button class="step-head" id="head-trial" aria-expanded="false" aria-controls="body-trial">
+        <span class="step-num">1</span>
+        <span class="step-headings"><span class="step-eyebrow" id="trial-eyebrow"></span><span class="step-title" id="trial-title"></span></span>
+        <span class="step-chip" id="chip-trial"></span>
+        <span class="step-chev" aria-hidden="true">▾</span>
+      </button>
+      <div class="step-body" id="body-trial" hidden>
+        <p class="block-sub" id="trial-sub"></p>
+        <div class="extra-row" style="border-bottom:none">
+          <input type="checkbox" id="trial-check">
+          <div class="body">
+            <strong><label for="trial-check" id="trial-opt-title"></label></strong>
+            <span class="muted" id="trial-opt-sub"></span>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- BULK STORAGE -->
-    <section class="block">
-      <div class="block-head"><span class="eyebrow" id="bulk-eyebrow"></span><h2 id="bulk-title"></h2></div>
-      <p class="block-sub" id="bulk-sub"></p>
-      <div class="slider-row">
-        <input type="range" id="bulk-slider" min="0" max="20" step="1" value="0" aria-label="To / TB">
-        <output id="bulk-out">0</output>
-      </div>
-      <p class="bulk-note" id="bulk-note"></p>
-      <div id="bulk-body" hidden>
-        <div class="segment bulk-modes" role="group">
-          <button id="bulk-cloud" aria-pressed="true">
-            <span class="seg-title" id="bc-title"></span>
-            <span class="seg-desc" id="bc-desc"></span>
+    <!-- DEPLOYMENT (Step 2) -->
+    <section class="block step">
+      <button class="step-head" id="head-dep" aria-expanded="false" aria-controls="body-dep">
+        <span class="step-num">2</span>
+        <span class="step-headings"><span class="step-eyebrow" id="dep-eyebrow"></span><span class="step-title" id="dep-title"></span></span>
+        <span class="step-chip" id="chip-dep"></span>
+        <span class="step-chev" aria-hidden="true">▾</span>
+      </button>
+      <div class="step-body" id="body-dep" hidden>
+        <p class="block-sub" id="dep-sub"></p>
+        <div class="segment" role="group" id="dep-segment">
+          <button id="seg-hosted" aria-pressed="true">
+            <span class="seg-title" id="seg1-title"></span>
+            <span class="seg-tag" id="seg1-tag"></span>
+            <span class="seg-desc" id="seg1-desc"></span>
           </button>
-          <button id="bulk-nas" aria-pressed="false">
-            <span class="seg-title" id="bn-title"></span>
-            <span class="seg-desc" id="bn-desc"></span>
+          <button id="seg-owned" aria-pressed="false">
+            <span class="seg-title" id="seg2-title"></span>
+            <span class="seg-tag" id="seg2-tag"></span>
+            <span class="seg-desc" id="seg2-desc"></span>
           </button>
         </div>
-        <div class="roi-chart">
-          <div id="roi-svg"></div>
-          <div class="roi-legend" id="roi-legend"></div>
-          <div class="roi-break" id="roi-break"></div>
+      </div>
+    </section>
+
+    <!-- APPS (Step 3) -->
+    <section class="block step">
+      <button class="step-head" id="head-apps" aria-expanded="false" aria-controls="body-apps">
+        <span class="step-num">3</span>
+        <span class="step-headings"><span class="step-eyebrow" id="apps-eyebrow"></span><span class="step-title" id="apps-title"></span></span>
+        <span class="step-chip" id="chip-apps" hidden></span>
+        <span class="step-chev" aria-hidden="true">▾</span>
+      </button>
+      <div class="step-body" id="body-apps" hidden>
+        <div class="block-head row" style="margin-bottom:8px">
+          <p class="block-sub" id="apps-sub" style="margin-bottom:0"></p>
+          <div class="mini-btns">
+            <button class="mini-btn" id="btn-reco"></button>
+            <button class="mini-btn" id="btn-clear"></button>
+          </div>
         </div>
-        <div class="roi-note" id="roi-note" hidden>
-          <span id="roi-text"></span>
-          <button id="roi-btn" hidden></button>
+        <div class="legend" id="legend"></div>
+        <div id="catalogue"></div>
+      </div>
+    </section>
+
+    <!-- BULK STORAGE (Step 4) -->
+    <section class="block step">
+      <button class="step-head" id="head-bulk" aria-expanded="false" aria-controls="body-bulk">
+        <span class="step-num">4</span>
+        <span class="step-headings"><span class="step-eyebrow" id="bulk-eyebrow"></span><span class="step-title" id="bulk-title"></span></span>
+        <span class="step-chip" id="chip-bulk" hidden></span>
+        <span class="step-chev" aria-hidden="true">▾</span>
+      </button>
+      <div class="step-body" id="body-bulk" hidden>
+        <p class="block-sub" id="bulk-sub"></p>
+        <div class="slider-row">
+          <input type="range" id="bulk-slider" min="0" max="20" step="1" value="0" aria-label="To / TB">
+          <output id="bulk-out">0</output>
+        </div>
+        <p class="bulk-note" id="bulk-note"></p>
+        <div id="bulk-body" hidden>
+          <div class="segment bulk-modes" role="group">
+            <button id="bulk-cloud" aria-pressed="true">
+              <span class="seg-title" id="bc-title"></span>
+              <span class="seg-desc" id="bc-desc"></span>
+            </button>
+            <button id="bulk-nas" aria-pressed="false">
+              <span class="seg-title" id="bn-title"></span>
+              <span class="seg-desc" id="bn-desc"></span>
+            </button>
+          </div>
+          <div class="roi-chart">
+            <div id="roi-svg"></div>
+            <div class="roi-legend" id="roi-legend"></div>
+            <div class="roi-break" id="roi-break"></div>
+          </div>
+          <div class="roi-note" id="roi-note" hidden>
+            <span id="roi-text"></span>
+            <button id="roi-btn" hidden></button>
+          </div>
         </div>
       </div>
     </section>
 
+    <!-- EXTRAS (Step 5) -->
+    <section class="block step">
+      <button class="step-head" id="head-extras" aria-expanded="false" aria-controls="body-extras">
+        <span class="step-num">5</span>
+        <span class="step-headings"><span class="step-eyebrow" id="extras-eyebrow"></span><span class="step-title" id="extras-title"></span></span>
+        <span class="step-chip" id="chip-extras" hidden></span>
+        <span class="step-chev" aria-hidden="true">▾</span>
+      </button>
+      <div class="step-body" id="body-extras" hidden>
 
-    <!-- APPS -->
-    <section class="block">
-      <div class="block-head row">
-        <div class="block-head" style="margin-bottom:0"><span class="eyebrow" id="apps-eyebrow"></span><h2 id="apps-title"></h2></div>
-        <div class="mini-btns">
-          <button class="mini-btn" id="btn-reco"></button>
-          <button class="mini-btn" id="btn-clear"></button>
+      <h4 class="subgroup" id="sg-ws"></h4>
+
+      <div class="extra-row">
+        <input type="checkbox" id="hw-check">
+        <div class="body">
+          <strong><label for="hw-check" id="hw-title"></label></strong>
+          <span class="muted" id="hw-sub"></span>
         </div>
       </div>
-      <p class="block-sub" id="apps-sub"></p>
-      <div class="legend" id="legend"></div>
-      <div id="catalogue"></div>
-    </section>
 
-    <!-- EXTRAS -->
-    <section class="block">
-      <div class="block-head"><span class="eyebrow" id="extras-eyebrow"></span><h2 id="extras-title"></h2></div>
+      <div class="extra-row">
+        <div class="body">
+          <strong id="prov-title"></strong>
+          <span class="muted" id="prov-sub"></span>
+        </div>
+        <span class="stepper">
+          <button id="prov-minus" aria-label="−">−</button>
+          <output id="prov-count" aria-live="polite">0</output>
+          <button id="prov-plus" aria-label="+">+</button>
+        </span>
+      </div>
+
+      <div class="extra-row" id="ws-row">
+        <div class="body">
+          <strong id="ws-title"></strong>
+          <span class="muted" id="ws-sub"></span>
+          <span class="lock-note" id="ws-lock" hidden></span>
+        </div>
+        <span class="stepper">
+          <button id="ws-minus" aria-label="−">−</button>
+          <output id="ws-count" aria-live="polite">0</output>
+          <button id="ws-plus" aria-label="+">+</button>
+        </span>
+      </div>
+
+      <h4 class="subgroup" id="sg-web"></h4>
 
       <div class="extra-row">
         <input type="checkbox" id="dom-check">
@@ -363,17 +468,7 @@ select{font-family:var(--font-body);font-size:.92rem;padding:8px 10px;border:1.5
         </div>
       </div>
 
-      <div class="extra-row">
-        <div class="body">
-          <strong id="ws-title"></strong>
-          <span class="muted" id="ws-sub"></span>
-        </div>
-        <span class="stepper">
-          <button id="ws-minus" aria-label="−">−</button>
-          <output id="ws-count" aria-live="polite">0</output>
-          <button id="ws-plus" aria-label="+">+</button>
-        </span>
-      </div>
+      <h4 class="subgroup" id="sg-support"></h4>
 
       <div class="extra-row">
         <div class="body">
@@ -381,6 +476,7 @@ select{font-family:var(--font-body);font-size:.92rem;padding:8px 10px;border:1.5
           <span class="muted" id="blk-sub"></span>
         </div>
         <select id="block-select"></select>
+      </div>
       </div>
     </section>
   </div>
@@ -448,7 +544,7 @@ const CONFIG = {
   defaultLang: "fr",                  // "fr" or "en"
 
   // Apps pre-selected by the "Recommended starter" button
-  recommended: ["vaultwarden","yopass","stirlingpdf","pairdrop","wikijs","rallly"],
+  recommended: ["vaultwarden","stirlingpdf","pairdrop","bookstack","rallly"],
 
   prices: {
     audit: 500,                       // mandatory onboarding audit (credited toward project)
@@ -456,6 +552,8 @@ const CONFIG = {
     // --- hosted (our infrastructure) ---
     hosted: {
       setup: 2500,                    // one-time: dedicated client VM stack on our fabric (~4 days: VM, hardening, VPN, backups, monitoring, docs)
+      siteSetup: 750,                 // one-time: isolated public VPS for a website (server + Caddy/TLS + CrowdSec + backups; no mesh/identity/monitoring)
+      siteCare: 20,                   // monthly: dedicated website VPS hosting + updates + monitoring (separate from the app's own tier monthly)
       weights: { light: 1, standard: 2, heavy: 4 },
       sizes: [
         { maxWeight: 5,        monthly: 45 },   // small suite
@@ -484,6 +582,7 @@ const CONFIG = {
       low: 20, high: 60               // typical range shown (billed at cost)
     },
 
+    trialFee: 500,                    // one-time: temporary sandbox VPS for the client to test apps; credited toward their project if they sign
     emailSetup: 300,                  // one-time: mailboxes at a major provider (subscription paid directly to the provider)
 
     video: {                          // video hosting on Bunny Stream (usage rebilled at cost)
@@ -513,6 +612,7 @@ const CONFIG = {
 
     workstation: {
       perEndpointMonthly: 15,
+      provisioning: 125,              // one-time per machine: fresh install (Win 11 Pro / Ubuntu LTS) OR onboarding of an existing machine to our baseline — both bring the machine under care
       poolHours: 1
     },
     onPremPoolHours: 2,
@@ -542,125 +642,102 @@ const CONFIG = {
    ================================================================ */
 const APPS = [
  // Identity & security
- {id:"authentik", name:"Authentik", tier:"heavy", cat:0,
+ {id:"authentik", name:"Authentik", tier:"heavy", lic:["FREE","MIT core; SSO/SAML/LDAP/RADIUS all free; vendor pledges no features ever move to enterprise"], cat:0,
   blurb:{en:"Single sign-on — one login for everything.", fr:"Authentification unique — un seul identifiant pour tout."}},
- {id:"vaultwarden", name:"Vaultwarden", tier:"light", cat:0,
+ {id:"vaultwarden", name:"Vaultwarden", tier:"light", lic:["FREE","AGPLv3 (relicensed 2023); unlimited orgs/users; managed standalone MSP use explicitly fine"], cat:0,
   blurb:{en:"Team password manager (Bitwarden-compatible).", fr:"Gestionnaire de mots de passe d'équipe (compatible Bitwarden)."}},
- {id:"pwpush", name:"Password Pusher", tier:"light", cat:0, alt:"secrets",
-  blurb:{en:"One-time, self-destructing links for sharing secrets, with optional passphrase and expiry controls.", fr:"Liens à usage unique et autodestructibles pour partager des secrets, avec phrase secrète et expiration au choix."}},
- {id:"yopass", name:"Yopass", tier:"light", cat:0, alt:"secrets",
-  blurb:{en:"The minimalist take on one-time secret sharing — nothing to configure.", fr:"La version minimaliste du partage de secrets à usage unique — rien à configurer."}},
- {id:"privatebin", name:"PrivateBin", tier:"light", cat:0,
-  blurb:{en:"Encrypted, burn-after-reading text snippets.", fr:"Extraits de texte chiffrés, détruits après lecture."}},
  // Files & documents
- {id:"nextcloud", name:"Nextcloud", tier:"heavy", cat:1, alt:"files",
+ {id:"nextcloud", name:"Nextcloud", tier:"heavy", lic:["FREE","AGPLv3; no feature gating at OBNL scale (Enterprise only above 500 users); nonprofit offers exist; strong EU sovereignty"], cat:1,
   blurb:{en:"Full file sync & share platform — the Drive/Dropbox replacement, with a large app ecosystem.", fr:"Plateforme complète de synchronisation et de partage — remplace Drive/Dropbox, avec un vaste écosystème d'applications."},
   train:{price:600, en:"Folder structure, sharing policy, onboarding session", fr:"Structure de dossiers, politique de partage, session d'intégration"}},
- {id:"seafile", name:"Seafile", tier:"standard", cat:1, alt:"files",
-  blurb:{en:"Fast, focused file sync — leaner than Nextcloud, files only.", fr:"Synchronisation de fichiers rapide et ciblée — plus légère que Nextcloud, moins d'intégrations."},
-  train:{price:300, en:"Starter libraries and a short training", fr:"Structures de dossiers et courte formation"}},
- {id:"onlyoffice", name:"ONLYOFFICE", tier:"standard", cat:1, alt:"office", needsOneOf:["nextcloud","seafile"],
+ {id:"onlyoffice", name:"ONLYOFFICE", tier:"standard", lic:["FREE","AGPLv3; the old 20-connection limit was REMOVED in v9.4 (2026) and it is now single-process and lighter; best Microsoft-format (OOXML) fidelity"], rec:true, cat:1, alt:"office", needsOneOf:["nextcloud"],
   blurb:{en:"Word/Excel-style editing — the best fidelity with Microsoft file formats.", fr:"Édition style Word/Excel — la meilleure fidélité aux formats Microsoft."},
   note:{en:"Requires Nextcloud or Seafile", fr:"Requiert Nextcloud ou Seafile"}},
- {id:"collabora", name:"Collabora", tier:"standard", cat:1, alt:"office", needsOneOf:["nextcloud","seafile"],
+ {id:"collabora", name:"Collabora", tier:"standard", lic:["FREE","CODE build MPL-2.0, no limits; lightest (approx 1GB RAM), best ODF fidelity"], cat:1, alt:"office", needsOneOf:["nextcloud"],
   blurb:{en:"LibreOffice engine — strongest with open formats (ODF) and tracked changes.", fr:"Moteur LibreOffice — le plus solide avec les formats ouverts (ODF)"},
   note:{en:"Requires Nextcloud or Seafile", fr:"Requiert Nextcloud ou Seafile"}},
- {id:"paperlessngx", name:"Paperless-ngx", tier:"standard", cat:1,
+ {id:"paperlessngx", name:"Paperless-ngx", tier:"standard", lic:["FREE","GPLv3"], cat:1,
   blurb:{en:"Document management: scan it, OCR reads it, then find invoices, contracts and minutes with full-text search.", fr:"Gestion documentaire : numérisez tout avec OCR pour une recherche facile."},
   train:{price:450, en:"Scanning workflow, tags and filing rules", fr:"Flux de numérisation, étiquettes et règles de classement"}},
- {id:"cryptpad", name:"CryptPad", tier:"standard", cat:1,
-  blurb:{en:"End-to-end-encrypted collaborative documents, sheets and forms — even the server cannot read them.", fr:"Documents, feuilles et formulaires collaboratifs chiffrés de bout en bout — même le serveur ne peut pas les lire."},
-  note:{en:"Confidential companion — not a full Office-suite replacement", fr:"Complément confidentiel — ne remplace pas une suite Office complète"}},
- {id:"stirlingpdf", name:"Stirling-PDF", tier:"light", cat:1,
+ {id:"stirlingpdf", name:"Stirling-PDF", tier:"light", lic:["FREE","MIT core free; login/SSO now in a paid tier — gate access at the proxy and the free core is enough"], cat:1,
   blurb:{en:"PDF toolbox: merge, split, compress, OCR, redact etc.", fr:"Boîte à outils PDF : fusion, division, compression, OCR, caviardage etc."}},
- {id:"docuseal", name:"DocuSeal", tier:"light", cat:1,
-  blurb:{en:"E-signatures: waivers, board resolutions, agreements.", fr:"Signatures électroniques : décharges, résolutions, ententes."},
+ {id:"documenso", name:"Documenso", tier:"light", lic:["FREE","AGPLv3; basic OIDC SSO is included in the free self-hosted edition (works with Authentik) — only the multi-org SSO Portal is enterprise. EU-based (Germany)."], cat:1,
+  blurb:{en:"E-signatures: waivers, board resolutions, agreements — with single sign-on included.", fr:"Signatures électroniques : décharges, résolutions, ententes — avec authentification unique incluse."},
   train:{price:300, en:"First signing templates", fr:"Premiers gabarits de signature"}},
- {id:"pingvin", name:"Pingvin Share", tier:"light", cat:1,
-  blurb:{en:"WeTransfer-style big-file sends with expiry & passwords.", fr:"Envoi de gros fichiers façon WeTransfer, avec expiration et mot de passe."}},
- {id:"pairdrop", name:"PairDrop", tier:"light", cat:1,
+ {id:"pairdrop", name:"PairDrop", tier:"light", lic:["FREE","GPLv3"], cat:1,
   blurb:{en:"Instant device-to-device file drop on the local network.", fr:"Transfert instantané d'appareil à appareil sur le réseau local."}},
- {id:"convertx", name:"ConvertX", tier:"light", cat:1,
+ {id:"convertx", name:"ConvertX", tier:"light", lic:["FREE","AGPLv3"], cat:1,
   blurb:{en:"Any-to-any file conversion, in your browser, on your server.", fr:"Conversion de fichiers tous formats, dans le navigateur, sur votre serveur."}},
  // Communication
- {id:"mattermost", name:"Mattermost", tier:"standard", cat:2, alt:"chat",
-  blurb:{en:"Team chat — the Slack replacement, with a polished desktop & mobile experience.", fr:"Clavardage d'équipe — remplace Slack, avec des applications bureau et mobiles soignées."},
-  train:{price:300, en:"Channels, basic integrations, adoption", fr:"Canaux, intégrations de base, adoption"}},
- {id:"rocketchat", name:"Rocket.Chat", tier:"standard", cat:2, alt:"chat",
+ {id:"rocketchat", name:"Rocket.Chat", tier:"standard", lic:["FREE","Community edition INCLUDES SSO/OAuth/LDAP/2FA (unlike Mattermost, which moved SSO to paid in 2025). Enterprise only adds FIPS/DoD/RBAC. Best chat for the Authentik stack."], cat:2,
   blurb:{en:"Team chat similar to Mattermost.", fr:"Clavardage d'équipe similaire a Mattermost."},
   train:{price:300, en:"Channels, basic integrations, adoption", fr:"Canaux, intégrations de base, adoption"}},
- {id:"listmonk", name:"listmonk", tier:"standard", cat:2,
+ {id:"listmonk", name:"listmonk", tier:"standard", lic:["FREE","AGPLv3"], cat:2,
   blurb:{en:"Newsletters & mailing lists at pennies per send.", fr:"Infolettres et listes d'envoi pour quelques sous par envoi."},
   note:{en:"Needs an SMTP relay (e.g. SES); small per-send costs", fr:"Requiert un relais SMTP (p. ex. SES); légers frais d'envoi"},
   train:{price:450, en:"Templates, list import, sending setup", fr:"Gabarits, importation des listes, réglages d'envoi"}},
- {id:"shlink", name:"Shlink", tier:"light", cat:2,
+ {id:"shlink", name:"Shlink", tier:"light", lic:["FREE","MIT"], cat:2,
   blurb:{en:"Branded short links + QR codes with click stats.", fr:"Liens courts à votre image + codes QR avec statistiques."}},
- {id:"opnform", name:"OpnForm", tier:"standard", cat:2,
+ {id:"opnform", name:"OpnForm", tier:"standard", lic:["FLAG","AGPLv3 core free (full form building); OIDC SSO, custom domains, branding are permanently proprietary (no community path) — SSO into it is paid. France-based; single-dev bus-factor."], cat:2,
   blurb:{en:"Public forms (Typeform-style) that feed your database.", fr:"Formulaires publics (style Typeform) reliés à votre base de données."},
   train:{price:300, en:"First forms and routing", fr:"Premiers formulaires et acheminement"}},
- {id:"libretranslate", name:"LibreTranslate", tier:"standard", cat:2,
+ {id:"libretranslate", name:"LibreTranslate", tier:"standard", lic:["FREE","AGPLv3"], cat:2,
   blurb:{en:"Private FR↔EN machine translation — nothing leaves the server.", fr:"Traduction automatique FR↔EN privée — rien ne quitte le serveur."}},
- {id:"peertube", name:"PeerTube", tier:"heavy", cat:2, alt:"videolib",
+ {id:"peertube", name:"PeerTube", tier:"heavy", lic:["FREE","AGPLv3"], cat:2, alt:"videolib",
   blurb:{en:"Your internal video platform: channels, staff-only access, unlisted links — your recordings off the ad-driven platforms.", fr:"Votre plateforme vidéo interne : chaînes, accès réservé au personnel, liens non répertoriés — vos captations hors des plateformes publicitaires."},
   note:{en:"Plan bulk storage; SSO possible via Authentik", fr:"Prévoir du stockage de masse; SSO possible via Authentik"},
   train:{price:450, en:"Channels, visibility rules, first uploads, training", fr:"Chaînes, règles de visibilité, premiers téléversements, formation"}},
- {id:"jellyfin", name:"Jellyfin", tier:"standard", cat:2, alt:"videolib",
+ {id:"jellyfin", name:"Jellyfin", tier:"standard", lic:["FREE","GPLv2, no paid tier of any kind; SSO via free community plugin"], cat:2, alt:"videolib",
   blurb:{en:"The simple internal video library: staff watch recordings on web, mobile or TV apps.", fr:"La vidéothèque interne toute simple : le personnel visionne les enregistrements sur web, mobile ou télé."},
   note:{en:"Internal viewing — not designed for your public site", fr:"Usage interne — pas conçu pour le site public"},
   train:{price:300, en:"Libraries, accounts and training", fr:"Bibliothèques, comptes et formation"}},
  // Knowledge & scheduling
- {id:"outline", name:"Outline", tier:"standard", cat:3, deps:["authentik"], alt:"wiki",
-  blurb:{en:"Wiki / knowledge base with a Notion-style editor.", fr:"Wiki / base de connaissances, éditeur façon Notion."},
-  train:{price:300, en:"Initial structure and editor training", fr:"Structure initiale et formation des rédacteurs"}},
- {id:"wikijs", name:"Wiki.js", tier:"light", cat:3, alt:"wiki",
+ {id:"wikijs", name:"Wiki.js", tier:"light", lic:["FREE","AGPLv3; SSO free (LDAP/SAML/OAuth/OIDC); v2 stable, v3 long in alpha"], cat:3, alt:"wiki",
   blurb:{en:"Modern wiki with multiple editors (Markdown, visual) and flexible permissions.", fr:"Wiki moderne, plusieurs éditeurs (Markdown, visuel), permissions flexibles."},
   train:{price:300, en:"Initial structure and editor training", fr:"Structure initiale et formation des rédacteurs"}},
- {id:"bookstack", name:"BookStack", tier:"light", cat:3, alt:"wiki",
+ {id:"bookstack", name:"BookStack", tier:"light", lic:["FREE","MIT (cleanest wiki license); SAML2 SSO + MFA free; simple and stable — best fit for non-technical teams"], rec:true, cat:3, alt:"wiki",
   blurb:{en:"Simple documentation with draft-and-approve publishing.", fr:"Documentation simple avec publication par approbation."},
   train:{price:300, en:"Initial structure and editor training", fr:"Structure initiale et formation des rédacteurs"}},
- {id:"calcom", name:"Cal.com", tier:"standard", cat:3,
+ {id:"calcom", name:"Cal.com", tier:"standard", lic:["FLAG","AGPLv3 outside /ee; the /ee folder (SSO/SAML/teams/orgs) is paid even self-hosted. Solo booking free; SSO+teams paid. Cal.diy MIT fork is non-production only."], cat:3,
   blurb:{en:"Bookable meeting pages — the Calendly replacement.", fr:"Pages de rendez-vous réservables — remplace Calendly."},
   train:{price:300, en:"Event types and calendar connections", fr:"Types de rendez-vous et connexions d'agendas"}},
- {id:"rallly", name:"Rallly", tier:"light", cat:3,
+ {id:"rallly", name:"Rallly", tier:"light", lic:["FREE","AGPLv3"], cat:3,
   blurb:{en:"\u201CWhen can everyone meet?\u201D polls. Zero training needed.", fr:"Sondages « quand peut-on se réunir ? ». Aucune formation requise."}},
- {id:"librebooking", name:"LibreBooking", tier:"light", cat:3,
+ {id:"librebooking", name:"LibreBooking", tier:"light", lic:["FREE","GPLv3; OAuth2 + SAML SSO free"], cat:3,
   blurb:{en:"Room, van & equipment reservations.", fr:"Réservation de salles, de véhicules et d'équipement."}},
  // Data & operations
- {id:"directus", name:"Directus", tier:"standard", cat:4, alt:"db",
+ {id:"directus", name:"Directus", tier:"standard", lic:["FLAG","MSCL license (was BSL); free under $5M revenue AND <50 employees via Open Innovation Grant — every nonprofit qualifies [verified 2026]. Apply for the GRANT (full features incl. SSO), NOT bare Core tier (Core gates SSO). Converts to GPLv3 after 4yr."], cat:4,
   blurb:{en:"Database frontend with a friendly admin interface, built on a real SQL database.", fr:"Base de données avec interface conviviale, appuyée sur une vraie base SQL."},
   train:{price:900, en:"First database, templates, and team training", fr:"Première base de données, gabarits et formation de l'équipe"}},
- {id:"baserow", name:"Baserow", tier:"standard", cat:4, alt:"db",
-  blurb:{en:"Airtable-style tables — spreadsheets that behave like a database.", fr:"Tables façon Airtable — des feuilles qui se comportent comme une base de données."},
-  train:{price:600, en:"First tables and training", fr:"Premières tables et formation"}},
- {id:"metabase", name:"Metabase", tier:"standard", cat:4,
+ {id:"metabase", name:"Metabase", tier:"standard", lic:["FLAG","OSS edition AGPLv3 is free for internal BI/dashboards, but SSO + row-level security + interactive embedding are PAID (Pro). Fine if users log in directly. Superset=Apache but heavier ops, not cheaper."], cat:4,
   blurb:{en:"Self-serve dashboards for your databases.", fr:"Tableaux de bord en libre-service pour vos bases de données."},
   note:{en:"Pairs well with Directus", fr:"Se marie bien avec Directus"},
   train:{price:600, en:"First dashboards", fr:"Premiers tableaux de bord"}},
- {id:"n8n", name:"n8n", tier:"standard", cat:4,
-  blurb:{en:"Automation between your apps.", fr:"Automatisation entre vos applications."},
-  note:{en:"Workflow building quoted as project work", fr:"Création de flux facturée en projet"}},
- {id:"kimai", name:"Kimai", tier:"light", cat:4,
+ {id:"kimai", name:"Kimai", tier:"light", lic:["FREE","AGPLv3; SAML/LDAP SSO is FREE (docs name Authentik as an example IdP), 2FA + invoicing free; generous to NGOs"], cat:4,
   blurb:{en:"Time tracking with per-grant project reports.", fr:"Suivi du temps avec rapports par projet/subvention."}},
- {id:"snipeit", name:"Snipe-IT", tier:"standard", cat:4, alt:"inventory",
+ {id:"snipeit", name:"Snipe-IT", tier:"standard", lic:["FREE","AGPLv3; no caps; LDAP/AD login free. Patch note: CVE-2026-37709 (RCE) fixed Mar 2026 — keep patched via Tactical RMM."], cat:4, alt:"inventory",
   blurb:{en:"Full asset tracking with QR labels, check-in/out, and maintenance history.", fr:"Suivi complet des actifs : étiquettes QR, prêts et retours, historique d'entretien."},
   train:{price:450, en:"Asset import and labels", fr:"Importation des actifs et étiquettes"}},
- {id:"homebox", name:"Homebox", tier:"light", cat:4, alt:"inventory",
+ {id:"homebox", name:"Homebox", tier:"light", lic:["FREE","AGPLv3; multi-tenant (per-group). Simpler than Snipe-IT — pick by depth vs simplicity."], cat:4, alt:"inventory",
   blurb:{en:"Lightweight inventory for supplies & equipment — the simple option.", fr:"Inventaire léger pour fournitures et équipement — l'option toute simple."}},
- {id:"excalidraw", name:"Excalidraw", tier:"light", cat:4,
+ {id:"excalidraw", name:"Excalidraw", tier:"light", lic:["FREE","MIT"], cat:4,
   blurb:{en:"Shared whiteboard for workshops & planning.", fr:"Tableau blanc partagé pour ateliers et planification."}},
- {id:"fleet", name:"Fleet", tier:"standard", cat:4,
-  blurb:{en:"Device health & security visibility across the org.", fr:"Visibilité sur la santé et la sécurité des appareils."},
-  train:{price:450, en:"Baseline policies and dashboard", fr:"Politiques de base et tableau de bord"}},
- {id:"rustdesk", name:"RustDesk relay", tier:"light", cat:4,
-  blurb:{en:"Your own remote-assistance relay — no third parties.", fr:"Votre propre relais d'assistance à distance — sans intermédiaire."}},
  // Web presence
- {id:"wordpress", name:"WordPress", tier:"heavy", cat:5, alt:"site", alwaysHosted:true,
+ {id:"wordpress", name:"WordPress", tier:"heavy", lic:["FREE","GPLv2; core + a vast free plugin/theme ecosystem; SSO via free OIDC/SAML plugin. (Some commercial plugins are paid.)"], cat:5, alt:"site", alwaysHosted:true,
   blurb:{en:"Brochure site on the world's most common CMS — theme configured, pages built from your content.", fr:"Site vitrine sur le CMS le plus répandu — thème configuré, pages montées à partir de votre contenu."},
   note:{en:"Brochure site only (beyond: separate quote) · always on an isolated VPS", fr:"Site vitrine seulement (au-delà : soumission distincte) · toujours sur un VPS isolé"},
   train:{price:450, en:"Page-editing training for your team", fr:"Formation de l'équipe à l'édition des pages"}},
- {id:"odoosite", name:"Odoo (site web)", tier:"heavy", cat:5, alt:"site", alwaysHosted:true,
+ {id:"odoosite", name:"Odoo (site web)", tier:"heavy", lic:["FLAG","Community LGPLv3 includes the Website + eCommerce modules (free for a site). Enterprise-only: Studio, multi-company, Sign, AI/OCR. Fine for a brochure site; flag only if they need Enterprise modules."], cat:5, alt:"site", alwaysHosted:true,
   blurb:{en:"Brochure site on Odoo — can grow later into events, memberships, and more.", fr:"Site vitrine sur Odoo — extensible plus tard vers les événements, les adhésions et plus."},
   note:{en:"Brochure site only (beyond: separate quote) · always on an isolated VPS", fr:"Site vitrine seulement (au-delà : soumission distincte) · toujours sur un VPS isolé"},
+  train:{price:450, en:"Page-editing training for your team", fr:"Formation de l'équipe à l'édition des pages"}},
+ {id:"kirby", name:"Kirby", tier:"heavy", lic:["FLAG","Proprietary, per-domain license (one-time about 99 EUR Basic / 399 EUR Enterprise, 3 yrs updates). NOT libre. Flat-file, no DB. Nonprofits can apply for a free or discounted good-cause license (excludes religious/political orgs). German."], cat:5, alt:"site", alwaysHosted:true,
+  blurb:{en:"Flat-file CMS (no database) — fast, secure, fully bespoke design. A premium, developer-built site.", fr:"CMS sur fichiers (sans base de données) — rapide, sécuritaire, design entièrement sur mesure. Un site premium bâti par un développeur."},
+  note:{en:"Per-site license billed at cost (nonprofit discount/free license possible) · always on an isolated VPS", fr:"Licence par site facturée au coût (rabais ou licence gratuite possible pour OBNL) · toujours sur un VPS isolé"},
+  train:{price:450, en:"Page-editing training for your team", fr:"Formation de l'équipe à l'édition des pages"}},
+ {id:"statamic", name:"Statamic", tier:"heavy", lic:["FLAG","Core (Solo, single-user) free forever; Pro (multi-user/team) about 349 USD per site one-time + about 99/yr updates after year 1. 20% nonprofit discount. Laravel + flat-file. Source-available, not libre for team use."], cat:5, alt:"site", alwaysHosted:true,
+  blurb:{en:"Laravel + Git CMS — flat-file, designer-friendly, with forms and static caching built in.", fr:"CMS Laravel + Git — sur fichiers, convivial pour les designers, avec formulaires et cache statique intégrés."},
+  note:{en:"Pro (multi-user) license billed at cost; Solo is free for a single editor · always on an isolated VPS", fr:"Licence Pro (multiutilisateur) facturée au coût; Solo gratuite pour un seul éditeur · toujours sur un VPS isolé"},
   train:{price:450, en:"Page-editing training for your team", fr:"Formation de l'équipe à l'édition des pages"}}
 ];
 
@@ -674,13 +751,17 @@ fr:{
   heroSub:"Tarifs réservés aux OBNL du Québec.\nTout frais mensuel inclut les mises à jour, la surveillance et des sauvegardes testées.",
   v1t:"Vos données vous appartiennent",
   v1d:"Elles vivent sur une infrastructure que vous contrôlez — pas sur la plateforme d'un tiers qui en fixe les règles.",
-  v2t:"Indépendance",
-  v2d:"Des logiciels libres sans verrouillage propriétaire.\nPersonne ne peut vous retirer vos outils.",
+  v2t:"Affranchissez-vous des GAFAM",
+  v2d:"Des logiciels libres, sans verrouillage ni licence par utilisateur — et la liberté de choisir, pour chaque besoin, l'outil qui vous convient vraiment.",
   v3t:"Réversibilité",
   v3d:"Tout demeure exportable, en tout temps.\nPartir est permis — et on vous aide à le faire.",
   auditEyebrow:"Avant tout", auditTitle:"Audit d'intégration — inclus dans chaque projet",
-  auditSub:"Inventaire, revue de la sécurité et des sauvegardes, feuille de route écrite. Le montant est entièrement crédité sur votre projet si vous allez de l'avant dans les 90 jours — il apparaît donc dans l'estimation avec son crédit.",
-  depEyebrow:"Étape 1", depTitle:"Où est-ce hébergé ?",
+  auditSub:"Inventaire, revue de la sécurité et des sauvegardes, feuille de route écrite. Le montant est entièrement crédité sur votre projet si vous allez de l'avant dans les 60 jours — il apparaît donc dans l'estimation avec son crédit.",
+  trialEyebrow:"Étape 1", trialTitle:"Essayez avant de vous engager",
+  trialSub:"Pas certain qu'une application vous convienne ? On monte un serveur d'essai temporaire, garni des applications de votre choix, accessible comme s'il était le vôtre. Vous testez en conditions réelles, sans rien installer, avant toute décision d'infrastructure.",
+  trialOptTitle:"Essai temporaire — {p} pour 2 semaines",
+  trialOptSub:"Serveur d'essai privé, applications de votre choix, accès sécurisé. Entièrement crédité sur votre projet si vous allez de l'avant dans les 60 jours.",
+  depEyebrow:"Étape 2", depTitle:"Où est-ce hébergé ?",
   depSub:"Commencez hébergé avec une ou deux applications, ou optez pour un serveur dédié dans vos locaux. (On peut passer de l'un à l'autre plus tard.)",
   seg1Title:"Hébergé pour vous", seg1Tag:"Aucun matériel",
   seg1Desc:"Sur notre infrastructure gérée. Mise en service unique, puis des frais d'hébergement mensuels selon la taille de votre suite. Idéal pour démarrer.",
@@ -697,9 +778,9 @@ fr:{
   },
   setupWord:"d'installation", perMo:"/mois",
   tierNames:{light:"Léger", standard:"Standard", heavy:"Exigeant"},
-  needs:"Requiert", altPick:"Au choix — même fonction",
+  needs:"Requiert", altPick:"Au choix — même fonction", recBadge:"Recommandé",
   trainLabel:"+ Accompagnement initial —",
-  bulkEyebrow:"Étape 2", bulkTitle:"Stockage de masse",
+  bulkEyebrow:"Étape 4", bulkTitle:"Stockage de masse",
   bulkSub:"Pour les archives, photothèques, vidéos etc.\nGlissez pour choisir une taille, puis comparez les deux approches (infonuagique vs NAS).",
   bcTitle:"Infonuagique géré", bcDesc:"{p}/To par mois — surveillance et vérification des sauvegardes incluses. Tarif indicatif, ajusté selon le fournisseur retenu.",
   bnTitle:"NAS dans vos locaux", bnDesc:"Investissement unique + {c}/mois d'entretien. Disques en miroir, installés dans vos locaux.",
@@ -709,15 +790,21 @@ fr:{
   roiBtn:"Choisir le NAS",
   roiCalmTxt:"À ce volume, l'infonuagique demeure plus économique sur 3 ans.",
   bulkNote:"Une sauvegarde externe chiffrée est toujours incluse — minimum {m} To (voir l'estimation).",
-  extrasEyebrow:"Étape 4", extrasTitle:"Options",
+  extrasEyebrow:"Étape 5", extrasTitle:"Options",
   domTitle:"Nom de domaine",
   domSub:"Si vous n'en avez pas déjà un : enregistrement à votre nom et configuration, facturés au coûtant.\nLe prix varie selon l'extension choisie (.org, .ca, .coop…) — comptez environ {lo} à {hi} par année.",
   emTitle:"Courriel professionnel — mise en place",
   emSub:"Boîtes aux lettres chez un grand fournisseur de votre choix : configuration du domaine (MX, SPF, DKIM, DMARC), création des comptes et guide d'installation — forfait {p}. L'abonnement (≈ 5–10 $/utilisateur/mois) est payé directement au fournisseur.",
   vidTitle:"Hébergement vidéo (Bunny Stream)",
   vidSub:"Vos vidéos intégrées à votre site public, sans publicité ni algorithme : bibliothèque, lecteur à vos couleurs, intégration au site et formation au téléversement — forfait {p}, puis {c}/mois de gestion. La consommation Bunny (stockage et diffusion) est refacturée au coûtant — quelques dollars par mois en usage typique d'OBNL. Service propriétaire; vos fichiers demeurent exportables. Pour une vidéothèque interne, voyez plutôt PeerTube ou Jellyfin à l'étape 3.",
+  sgWs:"Postes de travail", sgWeb:"Présence en ligne", sgSupport:"Soutien",
+  hwTitle:"Nouveau matériel — fourni par nos soins",
+  hwSub:"Portables ou postes neufs, choisis selon vos besoins et fournis au prix établi à la soumission (le prix du marché varie). La mise en service ci-dessous s'ajoute par appareil.",
+  provTitle:"Mise en service des postes",
+  provSub:"{p} par appareil : installation propre (Windows 11 Pro ou Ubuntu LTS) ou prise en charge d'un poste existant, amenés à notre standard — chiffrement, agent de surveillance, migration des données. C'est ce qui rend l'entretien possible.",
   wsTitle:"Entretien des postes de travail",
-  wsSub:"{p}/mois par ordinateur relié à votre solution : agent de surveillance, mises à jour, chiffrement vérifié, client VPN et assistance à distance prioritaire.",
+  wsSub:"{p}/mois par poste mis en service : agent de surveillance, mises à jour, chiffrement vérifié, client VPN et assistance à distance prioritaire.",
+  wsLock:"Disponible une fois au moins un poste mis en service ci-dessus.",
   blkTitle:"Banque d'heures prépayée",
   blkSub:"Pour l'aide au-delà de votre banque incluse — questions, formation, petits changements. Valide 12 mois; s'inscrit bien dans une demande de subvention.",
   blkNone:"Aucune", blkOpt:"{h} heures — {p}",
@@ -729,13 +816,20 @@ fr:{
   gNextLabel:"Années suivantes (récurrent)", perYr:" /an",
   emptyOnce:"Choisissez des applications à gauche.", emptyMonthly:"Aucun service récurrent sélectionné.",
   rAudit:"Audit d'intégration", rAuditSub:"Obligatoire — crédité ci-dessous",
-  rCredit:"Crédit de l'audit", rCreditSub:"Appliqué à votre projet (90 jours)",
+  rCredit:"Crédit de l'audit", rCreditSub:"Appliqué à votre projet (60 jours)",
+  rTrial2:"Essai temporaire (2 semaines)", rTrial2Sub:"Serveur d'essai temporaire — crédité si vous allez de l'avant",
+  rTrialCredit:"Crédit de l'essai temporaire",
+  chipHosted:"Hébergé", chipOwned:"Serveur dédié",
+  chipApps:"{n} app(s)", chipExtras:"{n} option(s)",
+  chCloudCloud:"infonuagique", chCloudNas:"NAS",
   rHostedSetup:"Mise en service hébergée", rHostedSetupSub:"Espace dédié, réseau/VPN, sauvegardes, documentation",
+  rSiteServer:"Mise en place du serveur web", rSiteServerSub:"VPS isolé et durci pour le site (Caddy/TLS, CrowdSec, sauvegardes) — séparé de l'infrastructure interne",
+  rSiteCare:"Hébergement et maintenance du serveur web", rSiteCareSub:"VPS dédié au site : hébergement, mises à jour et surveillance",
   rHostedBase:"Hébergement de base ({s})", rHostedBaseSub:"Selon la taille de votre suite — {g} Go de données d'applications inclus",
   sizeNames:["petite suite","suite moyenne","grande suite"],
   rFoundation:"Déploiement de base", rFoundationSub:"Hyperviseur, réseau/VPN, surveillance, sauvegardes, documentation",
   rHardware:"Serveur (estimation)", rHardwareSub:"Habituellement {lo}–{hi}, confirmé à la soumission",
-  rUps:"Onduleur (UPS)", rUpsSub:"Obligatoire avec tout serveur sur place — protège des coupures et variations de courant; {lo}–{hi}",
+  rUps:"Onduleur (UPS)", rUpsSub:"Obligatoire avec tout équipement sur place (serveur ou NAS) — protège des coupures et variations de courant; {lo}–{hi}",
   rCare:"Entretien du serveur", rCareSub:"Système, stockage, vérification des sauvegardes, sécurité, revue trimestrielle",
   rDomain:"Nom de domaine (estim.)", rDomainSub:"Varie selon l'extension; renouvelé au coûtant",
   rEmail:"Courriel — mise en place", rEmailSub:"Domaine, comptes et guide; abonnement payé directement au fournisseur",
@@ -749,6 +843,9 @@ fr:{
   rNasSetup:"NAS — installation", rNasSetupSub:"RAID, partages, instantanés, surveillance",
   rNasCare:"Entretien du NAS", rNasCareSub:"Surveillance, mises à jour, vérification des sauvegardes",
   rWs:"Postes de travail × {n}", rWsSub:"Surveillance, mises à jour, assistance prioritaire",
+  rProv:"Mise en service × {n}", rProvSub:"Installation/prise en charge au standard — crédité si projet",
+  rHw:"Nouveau matériel", rHwSub:"Portables/postes neufs — établi à la soumission",
+  quoteWord:"sur devis",
   rBlock:"Banque d'heures ({h} h)", rBlockSub:"Valide 12 mois",
   rSetup:"{n} — installation", rTrain:"Accompagnement initial",
   rDep:"Ajouté automatiquement — requis par {x}",
@@ -771,13 +868,17 @@ en:{
   heroSub:"Rates reserved for NPOs in Quebec.\nEvery monthly fee includes updates, monitoring, and backups with tested restores.",
   v1t:"Your data is yours",
   v1d:"It lives on infrastructure you control — not on a third party's platform that sets the rules.",
-  v2t:"Independence",
-  v2d:"Open-source software with no proprietary lock-in. Nobody can take your tools away.",
+  v2t:"Break free from Big Tech",
+  v2d:"Open-source software, no lock-in and no per-user licences — and the freedom to pick, for each need, the tool that genuinely fits you.",
   v3t:"Reversibility",
   v3d:"Everything stays exportable, at all times. Leaving is allowed — and we'll help you do it.",
   auditEyebrow:"Before anything", auditTitle:"Onboarding audit — part of every project",
-  auditSub:"Inventory, security & backup review, written roadmap. The amount is fully credited toward your project if you go ahead within 90 days — so it appears in the estimate together with its credit.",
-  depEyebrow:"Step 1", depTitle:"Where does it live?",
+  auditSub:"Inventory, security & backup review, written roadmap. The amount is fully credited toward your project if you go ahead within 60 days — so it appears in the estimate together with its credit.",
+  trialEyebrow:"Step 1", trialTitle:"Try before you commit",
+  trialSub:"Not sure an app is right for you? We spin up a temporary trial server, loaded with the apps of your choice, that you can use as if it were your own. Test in real conditions, with nothing to install, before any infrastructure decision.",
+  trialOptTitle:"Test sandbox — {p} for 2 weeks",
+  trialOptSub:"Private trial server, apps of your choice, secure access. Fully credited toward your project if you go ahead within 60 days.",
+  depEyebrow:"Step 2", depTitle:"Where does it live?",
   depSub:"Start hosted with one or two apps, or go for a dedicated server at your office. You can move from one to the other later.",
   seg1Title:"Hosted for you", seg1Tag:"No hardware",
   seg1Desc:"Runs on our managed infrastructure. One-time onboarding, then a monthly hosting base that scales with the size of your suite. Ideal for getting started.",
@@ -794,9 +895,9 @@ en:{
   },
   setupWord:"setup", perMo:"/mo",
   tierNames:{light:"Light", standard:"Standard", heavy:"Heavy"},
-  needs:"Needs", altPick:"Pick one — same job",
+  needs:"Needs", altPick:"Pick one — same job", recBadge:"Recommended",
   trainLabel:"+ Initial setup & training —",
-  bulkEyebrow:"Step 2", bulkTitle:"Bulk storage",
+  bulkEyebrow:"Step 4", bulkTitle:"Bulk storage",
   bulkSub:"For archives, photo libraries, video, and backups — separate from app storage. Slide to choose a volume, then compare the two approaches.",
   bcTitle:"Managed cloud", bcDesc:"{p}/TB per month — monitoring and backup checks included. Indicative rate, adjusted to the chosen provider.",
   bnTitle:"NAS at your office", bnDesc:"One-time investment + {c}/month care. Mirrored drives, installed on your premises.",
@@ -806,15 +907,21 @@ en:{
   roiBtn:"Switch to NAS",
   roiCalmTxt:"At this volume, cloud stays cheaper over 3 years.",
   bulkNote:"An encrypted offsite backup is always included — minimum {m} TB (see the estimate).",
-  extrasEyebrow:"Step 4", extrasTitle:"Options",
+  extrasEyebrow:"Step 5", extrasTitle:"Options",
   domTitle:"Domain name",
   domSub:"If you don't already have one: registration in your name and configuration, billed at cost. The price varies with the extension you choose (.org, .ca, .coop…) — expect roughly {lo} to {hi} per year.",
   emTitle:"Business email — setup",
   emSub:"Mailboxes at a major provider of your choice: domain configuration (MX, SPF, DKIM, DMARC), account creation and a setup guide — {p} flat. The subscription (≈ $5–10/user/month) is paid directly to the provider.",
   vidTitle:"Video hosting (Bunny Stream)",
   vidSub:"Your videos embedded on your public site, without ads or algorithms: library, player in your colours, site embed and upload training — {p} flat, then {c}/month management. Bunny usage (storage and delivery) is rebilled at cost — a few dollars a month for typical non-profit use. Proprietary service; your files stay exportable. For an internal video library, see PeerTube or Jellyfin in Step 2 instead.",
+  sgWs:"Workstations", sgWeb:"Online presence", sgSupport:"Support",
+  hwTitle:"New hardware — supplied by us",
+  hwSub:"New laptops or desktops, chosen to fit your needs and supplied at the price set at quote time (market prices vary). Provisioning below is added per device.",
+  provTitle:"Workstation provisioning",
+  provSub:"{p} per device: clean install (Windows 11 Pro or Ubuntu LTS) or onboarding of an existing machine, brought to our baseline — encryption, monitoring agent, data migration. This is what makes care possible.",
   wsTitle:"Workstation care",
-  wsSub:"{p}/month per computer connected to your stack: monitoring agent, patching, encryption check, VPN client, and priority remote help.",
+  wsSub:"{p}/month per provisioned workstation: monitoring agent, patching, encryption check, VPN client, and priority remote help.",
+  wsLock:"Available once at least one workstation is provisioned above.",
   blkTitle:"Prepaid support block",
   blkSub:"For help beyond your included pool — questions, training, small changes. Valid 12 months; fits neatly in a grant line item.",
   blkNone:"None", blkOpt:"{h} hours — {p}",
@@ -826,13 +933,20 @@ en:{
   gNextLabel:"Following years (recurring)", perYr:" /yr",
   emptyOnce:"Pick apps on the left.", emptyMonthly:"No recurring services selected.",
   rAudit:"Onboarding audit", rAuditSub:"Mandatory — credited below",
-  rCredit:"Audit credit", rCreditSub:"Applied to your project (90 days)",
+  rCredit:"Audit credit", rCreditSub:"Applied to your project (60 days)",
+  rTrial2:"Test sandbox (2 weeks)", rTrial2Sub:"Temporary trial server — credited if you go ahead",
+  rTrialCredit:"Sandbox credit",
+  chipHosted:"Hosted", chipOwned:"Dedicated server",
+  chipApps:"{n} app(s)", chipExtras:"{n} option(s)",
+  chCloudCloud:"cloud", chCloudNas:"NAS",
   rHostedSetup:"Hosted onboarding", rHostedSetupSub:"Dedicated space, network/VPN, backups, documentation",
+  rSiteServer:"Website server setup", rSiteServerSub:"Hardened, isolated VPS for the site (Caddy/TLS, CrowdSec, backups) — separate from internal infrastructure",
+  rSiteCare:"Website server hosting & maintenance", rSiteCareSub:"Dedicated site VPS: hosting, updates and monitoring",
   rHostedBase:"Hosting base ({s})", rHostedBaseSub:"Scales with your app suite — includes {g} GB of app data",
   sizeNames:["small suite","medium suite","large suite"],
   rFoundation:"Foundation deployment", rFoundationSub:"Hypervisor, network/VPN, monitoring, backups, documentation",
   rHardware:"Server hardware (est.)", rHardwareSub:"Typically {lo}–{hi} — confirmed at quote time",
-  rUps:"UPS battery backup", rUpsSub:"Mandatory with any on-site server — protects against outages and voltage swings; {lo}–{hi}",
+  rUps:"UPS battery backup", rUpsSub:"Mandatory with any on-site equipment (server or NAS) — protects against outages and voltage swings; {lo}–{hi}",
   rCare:"Server care", rCareSub:"OS, storage health, backup checks, security, quarterly review",
   rDomain:"Domain name (est.)", rDomainSub:"Varies by extension; renews at cost",
   rEmail:"Email — setup", rEmailSub:"Domain, accounts and guide; subscription paid directly to the provider",
@@ -846,6 +960,9 @@ en:{
   rNasSetup:"NAS — installation", rNasSetupSub:"RAID, shares, snapshots, monitoring",
   rNasCare:"NAS care", rNasCareSub:"Monitoring, updates, backup checks",
   rWs:"Workstations × {n}", rWsSub:"Monitoring, patching, priority help",
+  rProv:"Provisioning × {n}", rProvSub:"Install/onboarding to baseline — credited if a project follows",
+  rHw:"New hardware", rHwSub:"New laptops/desktops — set at quote time",
+  quoteWord:"by quote",
   rBlock:"Support block ({h} h)", rBlockSub:"Valid 12 months",
   rSetup:"{n} — setup", rTrain:"Initial setup & training",
   rDep:"Added automatically — required by {x}",
@@ -880,13 +997,17 @@ const state = {
   explicit: new Set(),
   implied: new Map(),
   training: new Set(),
+  trial: false,
+  provisioning: 0,
+  newHardware: false,
   domain: false,
   email: false,
   video: false,
   bulkTB: 0,
   bulkMode: "cloud",
   supportBlock: 0,
-  openCats: new Set([0,1,2,3,4,5])
+  openCats: new Set(),
+  openSteps: new Set()
 };
 
 /* ====================== HELPERS ====================== */
@@ -1013,6 +1134,11 @@ function applyLang(){
   $("audit-title").textContent=t("auditTitle");
   $("audit-price").textContent=fmt.format(P.audit);
   $("audit-sub").textContent=t("auditSub");
+  $("trial-eyebrow").textContent=t("trialEyebrow");
+  $("trial-title").textContent=t("trialTitle");
+  $("trial-sub").textContent=t("trialSub");
+  $("trial-opt-title").textContent=tmpl(t("trialOptTitle"),{p:fmt.format(P.trialFee)});
+  $("trial-opt-sub").textContent=t("trialOptSub");
   $("dep-eyebrow").textContent=t("depEyebrow");
   $("dep-title").textContent=t("depTitle");
   $("dep-sub").textContent=t("depSub");
@@ -1043,6 +1169,14 @@ function applyLang(){
   $("vid-sub").textContent=tmpl(t("vidSub"),{p:fmt.format(P.video.setup),c:fmt.format(P.video.careMonthly)});
   $("ws-title").textContent=t("wsTitle");
   $("ws-sub").textContent=tmpl(t("wsSub"),{p:fmt.format(P.workstation.perEndpointMonthly)});
+  $("ws-lock").textContent=t("wsLock");
+  $("sg-ws").textContent=t("sgWs");
+  $("sg-web").textContent=t("sgWeb");
+  $("sg-support").textContent=t("sgSupport");
+  $("hw-title").textContent=t("hwTitle");
+  $("hw-sub").textContent=t("hwSub");
+  $("prov-title").textContent=t("provTitle");
+  $("prov-sub").textContent=tmpl(t("provSub"),{p:fmt.format(P.workstation.provisioning)});
   $("blk-title").textContent=t("blkTitle");
   $("blk-sub").textContent=t("blkSub")+" "+(state.lang==="fr"
     ? "Aide ponctuelle : "+fmt.format(P.hourly.business)+"/h (ouvrables), "+fmt.format(P.hourly.afterHours)+"/h (urgence)."
@@ -1076,11 +1210,11 @@ function applyLang(){
 /* ====================== CATALOGUE ====================== */
 function makeCard(a){
   const card=document.createElement("div");
-  card.className="app"; card.id="app-"+a.id;
+  card.className="app"+(a.rec?" rec":""); card.id="app-"+a.id;
   card.setAttribute("role","button"); card.setAttribute("tabindex","0");
   card.setAttribute("aria-pressed", isSelected(a.id));
   let inner =
-    '<span class="top"><span class="name">'+a.name+'</span>'+
+    (a.rec?'<span class="rec-badge">★ '+t("recBadge")+'</span>':'')+'<span class="top"><span class="name">'+a.name+'</span>'+
     '<span style="display:flex;gap:6px;align-items:center">'+
     '<span class="chip t-'+a.tier+'">'+t("tierNames")[a.tier]+'</span>'+
     '<span class="check" aria-hidden="true">✓</span></span></span>'+
@@ -1154,7 +1288,10 @@ function buildCatalogue(){
         const wrap=document.createElement("div"); wrap.className="altgroup";
         const lbl=document.createElement("span"); lbl.className="altgroup-label";
         lbl.textContent=t("altPick"); wrap.appendChild(lbl);
-        items.filter(s=>s.alt===a.alt).forEach(s=>{ wrap.appendChild(makeCard(s)); done.add(s.id); });
+        const sibs=items.filter(s=>s.alt===a.alt);
+        // recommended pick first (then FREE before flagged); with no recommendation, keep authoring order so options read as equals
+        if(sibs.some(s=>s.rec)){ const rank=s=>(s.rec?0:2)+((s.lic&&s.lic[0]==="FREE")?0:1); sibs.sort((x,y)=>rank(x)-rank(y)); }
+        sibs.forEach(s=>{ wrap.appendChild(makeCard(s)); done.add(s.id); });
         grid.appendChild(wrap);
       }else{
         grid.appendChild(makeCard(a)); done.add(a.id);
@@ -1224,17 +1361,23 @@ function calc(){
   const showHostedInfra = selectedCount()===0 || hasSharedApps;  // site-only clients ride their own isolated VPS
 
   // --- one-time ---
+  if(state.trial) once.push({n:t("rTrial2"), s:t("rTrial2Sub"), v:P.trialFee});
   once.push({n:t("rAudit"), s:t("rAuditSub"), v:P.audit});
-  let projectOnce=0;
+  let projectOnce=0, upsAdded=false;
 
   if(isOnPrem()){
     once.push({n:t("rFoundation"), s:t("rFoundationSub"), v:P.foundation});
     once.push({n:t("rHardware"), s:tmpl(t("rHardwareSub"),{lo:fmt.format(P.hardware.low),hi:fmt.format(P.hardware.high)}), v:P.hardware.estimate});
     once.push({n:t("rUps"), s:tmpl(t("rUpsSub"),{lo:fmt.format(P.hardware.ups.low),hi:fmt.format(P.hardware.ups.high)}), v:P.hardware.ups.estimate});
-    projectOnce+=P.foundation+P.hardware.estimate+P.hardware.ups.estimate;
+    projectOnce+=P.foundation+P.hardware.estimate+P.hardware.ups.estimate; upsAdded=true;
   }else if(showHostedInfra){
     once.push({n:t("rHostedSetup"), s:t("rHostedSetupSub"), v:P.hosted.setup});
     projectOnce+=P.hosted.setup;
+  }
+
+  if(appRows.some(r=>r.app.alwaysHosted)){   // a website rides its own hardened, isolated VPS, billed separately from internal infra
+    once.push({n:t("rSiteServer"), s:t("rSiteServerSub"), v:P.hosted.siteSetup});
+    projectOnce+=P.hosted.siteSetup;
   }
 
   appRows.forEach(r=>{
@@ -1251,6 +1394,15 @@ function calc(){
     once.push({n:t("rNasSetup"), s:t("rNasSetupSub"), v:P.bulk.nas.setup});
     once.push({n:t("rNasHw")+" — "+state.bulkTB+" "+tbUnit(), s:t("rNasHwSub"), v:P.bulk.nas.hwBase+P.bulk.nas.hwPerTB*state.bulkTB});
     projectOnce+=P.bulk.nas.setup+P.bulk.nas.hwBase+P.bulk.nas.hwPerTB*state.bulkTB;
+    if(!upsAdded){ once.push({n:t("rUps"), s:tmpl(t("rUpsSub"),{lo:fmt.format(P.hardware.ups.low),hi:fmt.format(P.hardware.ups.high)}), v:P.hardware.ups.estimate}); projectOnce+=P.hardware.ups.estimate; upsAdded=true; }
+  }
+
+  if(state.provisioning>0){
+    once.push({n:tmpl(t("rProv"),{n:state.provisioning}), s:t("rProvSub"), v:P.workstation.provisioning*state.provisioning});
+    projectOnce+=P.workstation.provisioning*state.provisioning;
+  }
+  if(state.newHardware){
+    once.push({n:t("rHw"), s:t("rHwSub"), v:0, quote:true});
   }
 
   if(state.email){
@@ -1264,6 +1416,7 @@ function calc(){
   }
 
   if(projectOnce>0) once.push({n:t("rCredit"), s:t("rCreditSub"), v:-P.audit, credit:true});
+  if(projectOnce>0 && state.trial) once.push({n:t("rTrialCredit"), s:t("rCreditSub"), v:-P.trialFee, credit:true});
 
   if(state.supportBlock>0){
     const b=P.supportBlocks[state.supportBlock-1];
@@ -1276,6 +1429,9 @@ function calc(){
   }else if(showHostedInfra){
     const si=hostedSize();
     monthly.push({n:tmpl(t("rHostedBase"),{s:t("sizeNames")[si]}), s:tmpl(t("rHostedBaseSub"),{g:P.hostedIncludedGB}), v:P.hosted.sizes[si].monthly});
+  }
+  if(appRows.some(r=>r.app.alwaysHosted)){   // dedicated website VPS: hosting + maintenance
+    monthly.push({n:t("rSiteCare"), s:t("rSiteCareSub"), v:P.hosted.siteCare});
   }
   const bkTB=Math.max(state.bulkTB, P.backup.minTB);
   monthly.push({n:tmpl(t("rBackup"),{n:bkTB+" "+tbUnit()}), s:isOnPrem()?t("rBackupSubOnPrem"):t("rBackupSubHosted"), v:P.backup.baseMonthly+P.backup.perTBMonthly*bkTB});
@@ -1317,17 +1473,43 @@ function renderRows(el, rows, emptyMsg){
     const d=document.createElement("div");
     d.className="lrow"+(r.indent?" indent":"")+(r.credit?" credit":"");
     const name=(r.indent?"↳ ":"")+r.n;
-    d.innerHTML='<span class="li-name">'+name+(r.s?'<span class="sub">'+r.s+'</span>':'')+'</span><span class="li-amt">'+moneyRow(r.v)+'</span>';
+    const amt = r.quote ? t("quoteWord") : moneyRow(r.v);
+    d.innerHTML='<span class="li-name">'+name+(r.s?'<span class="sub">'+r.s+'</span>':'')+'</span><span class="li-amt">'+amt+'</span>';
     el.appendChild(d);
   });
 }
 
 function flash(el){ el.classList.remove("tick"); void el.offsetWidth; el.classList.add("tick"); }
 
+function setChip(id, text){
+  const el=$(id); if(!el) return;
+  el.hidden = !text;
+  el.textContent = text || "";
+}
+
 function render(){
   $("seg-hosted").setAttribute("aria-pressed", state.deploy==="hosted");
   $("seg-owned").setAttribute("aria-pressed", state.deploy==="owned");
+  $("trial-check").checked = state.trial;
+  $("hw-check").checked = state.newHardware;
 
+  // care requires at least one provisioned/onboarded machine — enforce the cap
+  const careCap = state.provisioning;
+  if(state.endpoints > careCap) state.endpoints = careCap;
+  const careLocked = careCap===0;
+  $("ws-lock").hidden = !careLocked;
+  document.querySelector("#ws-row .stepper").classList.toggle("locked", careLocked);
+
+  // step header chips (visible at a glance when collapsed)
+  setChip("chip-trial", state.trial ? fmt.format(P.trialFee) : "");
+  setChip("chip-dep", t(state.deploy==="owned" ? "chipOwned" : "chipHosted"));
+  const appN=state.explicit.size;
+  setChip("chip-apps", appN ? tmpl(t("chipApps"),{n:appN}) : "");
+  setChip("chip-bulk", state.bulkTB>0 ? state.bulkTB+" "+tbUnit()+" · "+t(state.bulkMode==="nas"?"chCloudNas":"chCloudCloud") : "");
+  let extrasN=(state.newHardware?1:0)+(state.provisioning>0?1:0)+(state.domain?1:0)+(state.email?1:0)+(state.video?1:0)+(state.endpoints>0?1:0)+(state.supportBlock>0?1:0);
+  setChip("chip-extras", extrasN ? tmpl(t("chipExtras"),{n:extrasN}) : "");
+
+  $("prov-count").textContent=state.provisioning;
   $("ws-count").textContent=state.endpoints;
 
   // bulk storage
@@ -1413,15 +1595,60 @@ $("btn-clear").addEventListener("click",()=>{
   state.explicit.clear(); state.implied.clear(); state.training.clear();
   render();
 });
+$("hw-check").addEventListener("change",e=>{ state.newHardware=e.target.checked; render(); });
+$("prov-minus").addEventListener("click",()=>{ state.provisioning=Math.max(0,state.provisioning-1); render(); });
+$("prov-plus").addEventListener("click",()=>{ state.provisioning=Math.min(100,state.provisioning+1); render(); });
 $("ws-minus").addEventListener("click",()=>{ state.endpoints=Math.max(0,state.endpoints-1); render(); });
-$("ws-plus").addEventListener("click",()=>{ state.endpoints=Math.min(60,state.endpoints+1); render(); });
+$("ws-plus").addEventListener("click",()=>{ state.endpoints=Math.min(state.provisioning,state.endpoints+1); render(); });
 $("block-select").addEventListener("change",e=>{ state.supportBlock=Number(e.target.value); render(); });
 $("btn-print").addEventListener("click",()=>window.print());
 $("mb-view").addEventListener("click",()=>$("ledger").scrollIntoView({behavior:"smooth"}));
 $("lang-fr").addEventListener("click",()=>{ state.lang="fr"; applyLang(); render(); });
 $("lang-en").addEventListener("click",()=>{ state.lang="en"; applyLang(); render(); });
+$("trial-check").addEventListener("change",e=>{ state.trial=e.target.checked; render(); });
+
+/* collapsible step headers */
+[["head-trial","body-trial"],["head-dep","body-dep"],["head-apps","body-apps"],["head-bulk","body-bulk"],["head-extras","body-extras"]].forEach(([h,b])=>{
+  $(h).addEventListener("click",()=>{
+    const open=$(h).getAttribute("aria-expanded")==="true";
+    $(h).setAttribute("aria-expanded", !open);
+    $(b).hidden = open;
+    if(open) state.openSteps.delete(b); else state.openSteps.add(b);
+  });
+});
 
 /* ====================== INIT ====================== */
+/* INTERNAL — nonprofit SaaS program intelligence (advisory, not shown to clients).
+   For some clients the honest call is "take the free nonprofit SaaS tier, don't pay me
+   to self-host this" — make that call openly; it wins trust for the work that matters
+   (server, member DB) where sovereignty is real and no free tier exists.
+   Call nonprofitPrograms() in console for the notes. */
+const NONPROFIT_PROGRAMS=[
+  ["Slack","Pro plan FREE for nonprofits <=250 members (85% off above), via TechSoup validation. BUT excludes churches/schools/hospitals/foundations/govt. Competes with self-hosted Mattermost. Counter-pitch: data lives on Salesforce US servers — fine if chat has no sovereignty need."],
+  ["Google Workspace","Free for eligible nonprofits (Google for Nonprofits). Strong competitor to self-hosted email/files. Same sovereignty counter-pitch."],
+  ["Microsoft 365","Business Premium granted/discounted for nonprofits. Already your declined 'Essentials' territory — don't fight free here; win on data gravity."],
+  ["Zoom","Discounts via TechSoup. Competes with Jitsi/Rocket.Chat video."],
+  ["Canva","Canva for Nonprofits free. Not in your stack but clients will mention it."],
+  ["TechSoup","The validation gateway for most of these (CA: techsoupcanada.ca). Clients register once, unlock many. Worth knowing as the common door."]
+];
+function nonprofitPrograms(){
+  console.group("%cflojess — nonprofit SaaS programs (advisory)","font-weight:bold");
+  NONPROFIT_PROGRAMS.forEach(([n,note])=>console.log(n+" — "+note));
+  console.groupEnd();
+  return NONPROFIT_PROGRAMS.map(x=>x[0]);
+}
+
+/* Internal planning aid (not shown to clients): list apps whose licensing needs attention.
+   Open the browser console to see it; or call licenseReport() anytime. */
+function licenseReport(){
+  const flagged=APPS.filter(a=>a.lic && a.lic[0]!=="FREE");
+  console.group("%cflojess — app licensing flags ("+flagged.length+"/"+APPS.length+")","font-weight:bold");
+  flagged.forEach(a=>console.log("["+a.lic[0]+"] "+a.name+" — "+a.lic[1]));
+  console.groupEnd();
+  return flagged.map(a=>a.name);
+}
+try{ licenseReport(); }catch(e){}
+
 applyLang();
 render();
 </script>
